@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def index(request):
+    return render(request, "index.html")
+
+def real_state_financing():
+    return render('financing.html')

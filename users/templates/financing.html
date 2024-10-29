@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="flex md:h-[66vh] h-full relative text-gray-200">
+    <img src="{{ url_for('static', filename='img/living-room.png') }}" alt="Uma sala de estar"
+        class="absolute h-full w-full object-cover">
+
+
+    <div class="flex flex-col md:flex-row z-10 container w-full m-auto justify-between align-center items-center gap-20 px-4 py-4">
+        <div class="flex flex-col max-w-sm gap-10">
+            <h2 class="title text-gray-100">Construa seu futuro</h2>
+            <p>
+                Aproveite nossas vantagens exclusivas no financiamento de imóveis: taxas competitivas e prazos
+                flexíveis, tornando o sonho da casa própria uma realidade.
+            </p>
+        </div>
+
+        <div
+            class="flex flex-col w-full max-w-lg h-full box-border bg-neutral-400 bg-opacity-25 rounded-3xl text-center gap-4 px-10 py-6">
+            <div class="text-neutral-300 gap-2">
+                <p class="text-2xl">De quanto você precisa?</p>
+                <p class="title ">R$ <span class="title text-gray-100">100.000,00</span></p>
+            </div>
+
+            <div class="border-t-2 border-collapse border-neutral-300 pt-2 box-border self-center">
+                <p class="text-base">Valor mínimo de R$ 100.000,00</p>
+            </div>
+
+            <input type="range" min="100000" max="1500000" value="100000">
+
+            <button type="submit" class="bg-teal-500 w-full p-4 rounded-lg text-xl font-bold text-gray-900">Simular
+                financiamento</button>
+        </div>
+    </div>
+</section>
+
+<section class="flex text-gray-200">
+    <div class="container m-auto my-20 px-4">
+
+        <h2 class="title mb-14 max-w-2xl text-gray-100">Conheça as vantagens do financiamento no Rocket Bank</h2>
+
+        <div class="flex flex-col md:flex-row gap-10">
+            <div class="flex flex-col gap-12">
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-line-chart fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Taxas de Juros Competitivas</span>: Nosso banco imaginário oferece taxas de juros altamente
+                        competitivas,
+                        permitindo que os clientes adquiram propriedades com pagamentos mensais acessíveis.</p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-puzzle-piece fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Ampla Variedade de Planos de Pagamento</span>: Proporcionamos uma diversidade de planos de pagamento
+                        flexíveis para atender às necessidades individuais dos clientes.</p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-thumbs-up fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Pré-aprovação Rápida e Descomplicada</span>: Nossa aprovação rápida simplifica o processo, permitindo
+                        que os
+                        clientes realizem seus sonhos imobiliários de maneira eficiente.</p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-users fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Pré-aprovação Rápida e Descomplicada</span>Assistência Profissional: Contamos com uma equipe de especialistas em financiamento imobiliário
+                        para
+                        orientar os clientes em cada etapa do processo.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-12">
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-money-check-alt fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Facilidades para Pagamentos Antecipados</span>: Oferecemos opções para pagamentos antecipados,
+                        possibilitando aos clientes reduzir seus encargos financeiros a longo prazo.</p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-shield-alt fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Seguros Integrados ao Financiamento</span>: Incluímos seguros integrados ao financiamento para proteger
+                        os
+                        investimentos dos clientes em caso de imprevistos. </p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-balance-scale fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Avaliação Justa de Imóveis</span>: Realizamos avaliações justas e transparentes, garantindo que os
+                        clientes
+                        obtenham o valor adequado para suas propriedades.</p>
+                </div>
+                <div class="flex flex-row gap-8 items-center">
+                    <i class="fa fa-gift fa-2x"></i>
+                    <p><span class="font-bold text-gray-100">Programas de Incentivo à Adimplência</span>: Implementamos programas de incentivo à adimplência,
+                        recompensando clientes que mantêm seus pagamentos em dia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://kit.fontawesome.com/83ebd63124.js" crossorigin="anonymous"></script>
+{% endblock %}
