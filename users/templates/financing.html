@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <section class="flex md:h-[66vh] h-full relative text-gray-200">
-    <img src="{{ url_for('static', filename='img/living-room.png') }}" alt="Uma sala de estar"
+    <img src="{% static 'img/living-room.png' %}" alt="Uma sala de estar"
         class="absolute h-full w-full object-cover">
 
 

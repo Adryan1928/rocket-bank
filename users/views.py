@@ -10,5 +10,5 @@ def signin(request):
 def signup(request):
     return render(request, "signup.html")
 
-def real_state_financing():
-    return render('financing.html')
+def real_state_financing(request):
+    return render(request, "financing.html")
