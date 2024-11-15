@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="h-[100vh] w-[100vw] relative">
+        <img src="{% static 'img/plane.png' %}" alt="Building"
+            class="relative w-full md:w-2/5 h-64 md:h-full object-cover">
+
+        <div class="relative md:absolute md:w-2/3 right-0 z-10 top-0 h-full bg-slate-900 md:rounded-tl-[40px]
+                    md:rounded-bl-[40px] flex flex-col box-border px-[5%] md:px-[15%] justify-center space-y-14 py-12">
+            <div class="space-y-2">
+                <h2 class="title text-gray-50">🚀 Bem-vindo de volta</h1>
+                    <p class="text-gray-50">Por favor, preencha os campos com seus dados</p>
+            </div>
+
+            <form action="." method="POST" class="space-y-20 scroll-css px-1"> {% csrf_token %}
+                <div class="flex flex-col space-y-6">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="flex text-gray-200 p-4 border-red-500 border-2 bg-red-500 bg-opacity-10 rounded-2xl"><p>{{ message }}</p></div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="name" class="text-gray-200 font-bold">Nome: </label>
+                        <input id="name" type="text" name="name" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="phone_number" class="text-gray-200 font-bold">Número: </label>
+                        <input id="phone_number" type="text" name="phone_number" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="email" class="text-gray-200 font-bold">E-mail: </label>
+                        <input id="email" type="email" name="email" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+
+                    <div class="flex space-x-6">
+                        <div class="flex flex-col space-y-2 w-full">
+                            <label for="birth_date" class="text-gray-200 font-bold">Data de Nascimento: </label>
+                            <input id="birth_date" type="date" name="birth_date"
+                                class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                            <span class=""></span>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 w-full">
+                            <label for="cpf" class="text-gray-200 font-bold">CPF: </label>
+                            <input id="cpf" type="text" name="cpf" placeholder="Digite aqui"
+                                class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                            <span class="text-xs text-red-500 hidden"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="password" class="text-gray-200 font-bold">Senha: </label>
+                        <input id="password" type="password" name="password" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="password-confirm" class="text-gray-200 font-bold">Confirmação da senha: </label>
+                        <input id="password-confirm" type="password" name="password-confirm" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-3">
+                    <button type="submit"
+                        class="bg-teal-500 text-slate-950 font-medium rounded py-2 px-4 w-full">Cadastrar-se</button>
+                    <p class="text-gray-200">
+                        Já possui uma conta? <span class="font-bold"><a href="{% url 'signin' %}">Faça
+                                login</a></span>.
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="{% static 'js/signup.js' %}"></script>
+</body>
+
+</html>

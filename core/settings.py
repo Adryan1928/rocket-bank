@@ -127,3 +127,18 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Login
+LOGOUT_REDIRECT_URL = 'signin'
+LOGIN_REDIRECT_URL = 'show_payments'
+LOGIN_URL = 'signin'
+
+# Messages
+
+from django.contrib.messages import constants
+
+MESSAGE_TAGS = {
+    constants.ERROR: 'red-300',
+    constants.WARNING: 'yellow-300',
+    constants.SUCCESS: 'green-300',
+}
