@@ -1,16 +1,18 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-
 from users.models import Client
 from .models import Payment, Favorite, Pix
 from .services import get_payments, set_payment
 from django.shortcuts import render
 from .models import Payment
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def show_payments(request, id):
     if request.method == 'GET':
+        if request.user.client.id != id:
+            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
         payments = get_payments(id)
         user = Client.objects.get(pk=id)
         favorites = Favorite.objects.filter(user=id)
@@ -26,7 +28,10 @@ def show_payments(request, id):
 
         return render(request, 'pagamentos.html', context=context)
 
+@login_required
 def add_favorite(request, id):
+    if request.user.client.id != id:
+            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     key = request.POST.get('key')
     type = request.POST.get('type')
 
@@ -40,7 +45,10 @@ def add_favorite(request, id):
 
     return redirect(reverse('payments:show_payments', args=[id]))
 
+@login_required
 def delete_favorite(request, id):
+    if request.user.client.id != id:
+            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     favorite = Favorite.objects.get(id=id)
     user_id = favorite.user.id
     favorite.delete()
@@ -85,7 +93,10 @@ def pix(request, id, step=None):
     except Pix.DoesNotExist:
         return render(request, 'pix.html', {'post': id, 'error': 'Chave Pix não encontrada'})
 
+@login_required
 def depositos(request, id):
+    if request.user.client.id != id:
+            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     if request.method == 'POST':
         valor = request.POST.get('valor')
         senha = request.POST.get('senha')
