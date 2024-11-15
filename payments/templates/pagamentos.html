@@ -77,7 +77,7 @@
             {% for favorito in favorites %}
             <li class="flex flex-col">
               <div class="flex justify-between mb-1">
-                <p>{{ favorito.name }}</p>
+                <p>{{ favorito.user.user.first_name }}</p>
                 <a href="{% url 'payments:delete_favorite' favorito.id %}"><button
                     class="bg-red-600 rounded-full px-2 py-px hover:bg-red-500">Remover</button></a>
               </div>

@@ -47,9 +47,9 @@ def add_favorite(request, id):
 
 @login_required
 def delete_favorite(request, id):
-    if request.user.client.id != id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     favorite = Favorite.objects.get(id=id)
+    if request.user.id != favorite.user.user.id:
+            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     user_id = favorite.user.id
     favorite.delete()
 
@@ -74,7 +74,7 @@ def pix(request, id, step=None):
 
         pix = Pix.objects.get(key=dados['chave'])
 
-        set_payment(id, pix.user_id, dados['valor'])
+        set_payment(request.user.client.id, pix.user_id, dados['valor'])
 
         # Clear session data after use
         del request.session['dados']
@@ -95,6 +95,7 @@ def pix(request, id, step=None):
 
 @login_required
 def depositos(request, id):
+    print(request.user)
     if request.user.client.id != id:
             return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
     if request.method == 'POST':

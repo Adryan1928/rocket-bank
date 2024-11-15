@@ -15,10 +15,13 @@ def get_payments(client_id):
 
 @transaction.atomic
 def set_payment(sender_id, receiver_id, value):
+    print("Valor: ", value)
     value = Decimal(value)
 
     sender = Client.objects.get(id=sender_id)
     receiver = Client.objects.get(id=receiver_id)
+
+    print(f"{sender} sends to {receiver}")
 
     Payment.objects.create(sender=sender, receiver=receiver, value=value)
 
