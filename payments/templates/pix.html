@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+<h1>Transferência Pix</h1>
+{% endblock %}
+
+{% block content %}
+<main class="flex justify-around items-center p-2 py-20 text-slate-50">
+  <!--ícone-->
+  <div class="hidden md:block relative">
+    <div class="h-2/3 w-2/3 rounded-full bg-sky-950 blur-2xl absolute translate-x-1/4 translate-y-1/4"></div>
+    <img src="{% static 'assets/pix asset.svg' %}" alt="" class="relative inset-0">
+  </div>
+  </div>
+  <!--Tela pix-->
+  <form class="bg-slate-800 md:w-1/2 px-16 py-8 flex flex-col gap-20 rounded-lg"
+    action="{% url 'payments:pix' id=post step='para_confirm' %}" method="post">
+    {% csrf_token %}
+    <h1 class="text-4xl font-semibold text-center">Selecione a Chave</h1>
+    <div class="flex flex-col justify-center items-center">
+      <label for="chave" class="text-base mb-1 font-bold">Chave Pix</label>
+      <input type="text" name="chave" id="chave"
+        class="w-full p-2 bg-slate-900 border border-opacity-60 border-stone-400 rounded" required>
+    </div>
+    <div class="flex gap-4 justify-center items-center">
+      <div class="flex flex-wrap">
+        <input type="radio" name="radio" id="cpf" class="hidden peer/cpf" required>
+        <label for="cpf"
+          class="p-2 bg-slate-900 rounded-full w-full flex justify-center items-center my-2 cursor-pointer transition duration-300 hover:bg-teal-500 peer-checked/cpf:bg-teal-500">CPF</label>
+        <input type="radio" name="radio" id="celular" class="hidden peer/celular">
+        <label for="celular"
+          class="p-2 bg-slate-900 rounded-full w-full flex justify-center items-center my-2 cursor-pointer transition duration-300 hover:bg-teal-500 peer-checked/celular:bg-teal-500">Celular</label>
+      </div>
+      <div class="flex flex-wrap">
+        <input type="radio" name="radio" id="email" class="hidden peer/email">
+        <label for="email"
+          class="p-2 bg-slate-900 rounded-full w-full flex justify-center items-center my-2 cursor-pointer transition duration-300 hover:bg-teal-500 peer-checked/email:bg-teal-500">Email</label>
+        <input type="radio" name="radio" id="key" class="hidden peer/chave">
+        <label for="key"
+          class="p-2 bg-slate-900 rounded-full w-full flex justify-center items-center my-2 cursor-pointer transition duration-300 hover:bg-teal-500 peer-checked/chave:bg-teal-500">Chave
+          Aleatória</label>
+      </div>
+    </div>
+    <div class="flex flex-col justify-center items-center">
+      <label for="valor" class="text-base mb-1 font-bold">Valor</label>
+      <input type="number" name="valor" id="valor"
+        class="w-full p-2 bg-slate-900 border border-opacity-60 border-stone-400 rounded" required>
+    </div>
+    <div class="flex flex-col gap-6">
+      <input type="submit" value="Avançar"
+        class="bg-teal-500 text-black font-bold p-2 rounded hover:bg-teal-600 transition-colors cursor-pointer">
+    </div>
+    <div class="flex gap-2 justify-center items-center">
+      <!--Duas bolinhas final da tela-->
+      <div class="w-4 h-4 bg-teal-500 rounded-full"></div>
+      <div class="w-4 h-4 bg-slate-900 rounded-full"></div>
+    </div>
+  </form>
+
+</main>
+{% endblock %}

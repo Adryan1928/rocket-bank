@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>Extrato</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="flex justify-center items-center w-full h-full py-12">
+        <div class="w-11/12 h-5/6 bg-slate-800 rounded-lg px-4 py-5 flex flex-col md:flex-row gap-12">
+            <div class="w-full flex flex-col gap-4 h-screen">
+                <div class="flex bg-slate-900 rounded-full py-1 px-2 gap-6">
+                    <img src="/static/assets/Vector.svg" class="relative inset-0" alt="Pesquisar">
+                    <form action="{{ url_for('extrato', id=post) }}" class="w-full" method="post">
+                        <input class="w-full bg-slate-900" placeholder="Pesquise por datas, nomes, valores..." name="filtro" type="text">
+                    </form>
+                </div>
+                <div class="bg-slate-900 px-16 md:px-12 lg:px-16 py-2 rounded-lg h-full scroll-css">
+                    <ul class="flex flex-col gap-2">
+                        {% if posts %}
+                            {% for saida in posts['Saidas'] %}
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <p>{{saida['name']}}</p>
+                                        <p class="text-red-500">Saída</p>
+                                        <p>{{saida['value']}} R$</p>
+                                    </div>
+                                    <div class="w-full h-px bg-slate-900"></div>
+                                </li>
+                            {% endfor %}
+                            {% for entrada in posts['Entradas'] %}
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <p>{{entrada['name']}}</p>
+                                        <p class="text-green-500">Entrada</p>
+                                        <p>{{entrada['value']}} R$</p>
+                                    </div>
+                                    <div class="w-full h-px bg-slate-900"></div>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                                <p>Nenhum pagamento foi realizado</p>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="w-full">
+                <h2 class="text-2xl text-center">Filtros</h2>
+                <form class="flex flex-col gap-5">
+                    <div class="flex flex-col gap-3">
+                        <label>Data</label>
+                        <div class="flex gap-4">
+                            <div><input type="radio" id="recentes" value="re" class="hidden peer" name="Data"><label for="recentes" class="bg-slate-900 px-3 py-1 rounded-full peer-checked:bg-teal-500">Recentes</label></div>
+
+                            <div><input type="radio" id="antigos" value="ma" class="hidden peer" name="Data"><label for="antigos" class="bg-slate-900 px-3 py-1 rounded-full peer-checked:bg-teal-500">Mais antigos</label></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <label>Ordem de Nomes</label>
+                        <div class="flex gap-4">
+                            <div><input type="radio" id="az" value="az" class="hidden peer" name="nomes"><label for="az" class="bg-slate-900 px-3 py-1 rounded-full peer-checked:bg-teal-500">De A-Z</label></div>
+
+                            <div><input type="radio" id="za" value="za" class="hidden peer" name="nomes"><label for="za" class="bg-slate-900 px-3 py-1 rounded-full peer-checked:bg-teal-500">De Z-A</label></div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="py-1 w-full bg-teal-500 text-slate-950 rounded-full" type="reset">Limpar Filtros</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
