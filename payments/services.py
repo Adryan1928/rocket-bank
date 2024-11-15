@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import transaction
 from .models import Payment, Client
 
@@ -14,6 +15,8 @@ def get_payments(client_id):
 
 @transaction.atomic
 def set_payment(sender_id, receiver_id, value):
+    value = Decimal(value)
+
     sender = Client.objects.get(id=sender_id)
     receiver = Client.objects.get(id=receiver_id)
 
