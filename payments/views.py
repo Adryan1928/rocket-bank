@@ -156,3 +156,16 @@ def extrato(request):
     }
 
     return render(request, 'extrato.html', context)
+
+@login_required
+def register_pix(request):
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        type = request.POST.get('type')
+        user = request.user.client
+
+        Pix.objects.create(user=user, key=key, type=type)
+
+        return redirect(reverse('payments:show_payments', args=[user.id]))
+
+    return render(request, 'register_pix.html')
