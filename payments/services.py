@@ -3,15 +3,18 @@ from django.db import transaction
 from .models import Payment, Client
 
 @transaction.atomic
-def get_payments(client_id):
-    entradas = Payment.objects.filter(receiver_id=client_id).select_related('sender__user')
-    saidas = Payment.objects.filter(sender_id=client_id).select_related('receiver__user')
+def get_payments(client_id, payments=None):
+    if payments is None:
+        payments = Payment.objects.all()
 
-    payments = {
-        'Entradas': list(entradas.values('id', 'sender__user__id', 'sender__user__username', 'value', 'date')),
-        'Saidas': list(saidas.values('id', 'receiver__user__id', 'receiver__user__username', 'value', 'date'))
+    incomes = payments.filter(receiver_id=client_id).select_related('sender__user')
+    expenses = payments.filter(sender_id=client_id).select_related('receiver__user')
+
+    result = {
+        'Incomes': list(incomes.values('id', 'sender__user__id', 'sender__user__username', 'value', 'date')),
+        'Expenses': list(expenses.values('id', 'receiver__user__id', 'receiver__user__username', 'value', 'date'))
     }
-    return payments
+    return result
 
 @transaction.atomic
 def set_payment(sender_id, receiver_id, value):

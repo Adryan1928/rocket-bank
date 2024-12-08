@@ -36,7 +36,7 @@ def signup(request):
 
         if password != password_confirm:
             messages.add_message(request, constants.ERROR, 'As senhas não conferem')
-        
+
         else:
             try:
                 user = User.objects.create_user(first_name=name, email=email, password=password, username=email)
@@ -51,20 +51,3 @@ def signup(request):
 
 def real_state_financing(request):
     return render(request, "financing.html")
-
-def extrato(request, id):
-    payments = get_payments(id)
-    if request.method == 'POST':
-        text = request.POST.get('filtro')
-        if len(text.strip()) == 0:
-            return render(request, 'extrato.html', {'post': id, 'posts': payments})
-
-        payments_filtrado = {'Entradas': [], 'Saidas': []}
-        for en_sa in payments:
-            for payment in payments[en_sa]:
-                if payment['name'] == text:
-                    payments_filtrado[en_sa].append(payment)
-
-        return render(request, 'extrato.html', {'post': id, 'posts': payments_filtrado})
-
-    return render(request, 'extrato.html', {'post': id, 'posts': payments})
