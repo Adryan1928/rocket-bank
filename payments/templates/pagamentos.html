@@ -20,9 +20,10 @@
         {% for expense in payments.Expenses %}
         <li>
           <div class="flex justify-between mb-1">
-            <p>{{ expense.sender__user__username }}</p>
+            <p>{{ expense.receiver__user__first_name }} {{ expense.receiver__user__last_name }}</p>
             <p class="text-red-500">Saída</p>
             <p>{{ expense.value }} R$</p>
+            <p>Chave: {{ expense.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
@@ -30,9 +31,10 @@
         {% for income in payments.Incomes %}
         <li>
           <div class="flex justify-between mb-1">
-            <p>{{ income.sender__user__username }}</p>
+            <p>{{ income.sender__user__first_name }} {{ income.sender__user__last_name }}</p>
             <p class="text-green-500">Entrada</p>
             <p>{{ income.value }} R$</p>
+            <p>Chave: {{ income.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
@@ -52,23 +54,23 @@
     <div class="bg-slate-800 rounded-lg">
       <ul class="flex p-4 gap-6 items-center">
         <li><a href="{% url 'payments:pix' post %}" title="Acessar Pix">
-          <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
-            <p>Pix</p>
-          </div>
+            <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
+              <p>Pix</p>
+            </div>
           </a>
         </li>
         <li><a href="{% url 'payments:depositos' post %}" title="Acessar Depósito">
-          <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/vaadin_money-deposit.svg"
-              alt="Depósito">
-            <p>Depósito</p>
-          </div>
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/vaadin_money-deposit.svg"
+                alt="Depósito">
+              <p>Depósito</p>
+            </div>
           </a>
         </li>
         <li><a href="{% url 'payments:register_pix' %}" title="Registrar Chave Pix">
-          <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/ic_baseline-pix.svg"
-              alt="Registrar Chave Pix">
-            <p>Registrar Chave Pix</p>
-          </div>
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/ic_baseline-pix.svg"
+                alt="Registrar Chave Pix">
+              <p>Registrar Chave Pix</p>
+            </div>
           </a>
         </li>
       </ul>

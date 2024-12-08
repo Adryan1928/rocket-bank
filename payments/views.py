@@ -77,7 +77,7 @@ def pix(request, id, step=None):
 
         pix = Pix.objects.get(key=dados['chave'])
 
-        set_payment(request.user.client.id, pix.user_id, dados['valor'])
+        set_payment(request.user.client.id, pix.user_id, dados['valor'], pix.value)
 
         # Clear session data after use
         del request.session['dados']
@@ -113,7 +113,9 @@ def depositos(request, id):
 
 @login_required
 def extrato(request):
-    payments = Payment.objects.all()
+    payments = get_payments(request.user.client.id)
+    print(payments)
+
     if request.method == 'POST':
         search_query = request.POST.get('search', '').strip()
 
