@@ -13,22 +13,16 @@ from decimal import Decimal
 
 
 @login_required
-def show_payments(request, id):
+def show_payments(request):
     if request.method == 'GET':
-        if request.user.client.id != id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
-        payments = get_payments(id)
-        user = Client.objects.get(pk=id)
-        favorites = Favorite.objects.filter(user=id)
+        payments = get_payments(request.user.client.id)
+        user = Client.objects.get(user=request.user)
+        favorites = Favorite.objects.filter(user=user)
 
         context = {
-            'post': id,
-            'user': user,
             'favorites': favorites,
             'payments': payments
         }
-
-        print("Cash: ", context)
 
         return render(request, 'pagamentos.html', context=context)
 

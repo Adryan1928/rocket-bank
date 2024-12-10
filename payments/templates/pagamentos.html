@@ -8,7 +8,7 @@
 <div class="flex justify-center gap-4 lg:gap-20 p-8 lg:p-16 flex-col md:flex-row">
   <div class="bg-slate-800 w-full lg:w-2/6 text-center p-12 flex flex-col gap-12 rounded-lg">
     <h2 class="text-2xl">
-      <span class="text-teal-500">Saldo:</span> R${{ user.cash }}
+      <span class="text-teal-500">Saldo:</span> R${{ user.client.cash }}
     </h2>
     <div>
       <h2 class="text-2xl mb-1">Extrato</h2>
@@ -53,7 +53,7 @@
   <div class="lg:w-1/2 w-full flex flex-col gap-12">
     <div class="bg-slate-800 rounded-lg">
       <ul class="flex p-4 gap-6 items-center">
-        <li><a href="{% url 'payments:pix' post %}" title="Acessar Pix">
+        <li><a href="{% url 'payments:pix' %}" title="Acessar Pix">
             <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
               <p>Pix</p>
             </div>
@@ -100,7 +100,7 @@
               onclick="mostrar()">Adicionar</button></div>
           <div id="modal" class="hidden w-full bg-slate-900 rounded-xl p-6">
             <h2 class="text-center text-xl mb-4">Novo favorito</h2>
-            <form action="{% url 'payments:add_favorite' post %}" method="post">
+            <form action="{% url 'payments:add_favorite' %}" method="post">
               {% csrf_token %}
               <div class="mb-2">
                 <label for="Name">Nome</label>
