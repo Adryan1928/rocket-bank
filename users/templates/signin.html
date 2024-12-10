@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="h-[100vh] w-[100vw] relative">
+        <img src="{% static 'img/building.png' %}" alt="Building"
+            class="relative w-full md:w-2/5 h-64 md:h-full object-cover">
+        
+        <div class="relative md:absolute md:w-2/3 right-0 z-10 top-0 h-full bg-slate-900 md:rounded-tl-[40px]
+                    md:rounded-bl-[40px] flex flex-col box-border px-[5%] md:px-[15%] justify-center space-y-14 py-12">
+            <div class="space-y-2">
+                <h2 class="title text-gray-50">🚀 Bem-vindo de volta</h1>
+                    <p class="text-gray-50">Por favor, preencha os campos com seus dados</p>
+            </div>
+
+            <form action="." method="post" class="space-y-20 px-1"> {% csrf_token %}
+                <div class="flex flex-col space-y-6">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="flex text-gray-200 p-4 border-red-500 border-2 bg-red-500 bg-opacity-10 rounded-2xl"><p>{{ message }}</p></div>
+                            {% endfor %}
+                        {% endif %}
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="email" class="text-gray-200 font-bold">E-mail: </label>
+                        <input id="email" type="text" name="email" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+
+                    <div class="flex flex-col space-y-2">
+                        <label for="password" class="text-gray-200 font-bold">Senha: </label>
+                        <input id="password" type="password" name="password" placeholder="Digite aqui"
+                            class="rounded py-2 px-4 bg-slate-800 text-slate-50">
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-3">
+                    <button type="submit"
+                        class="bg-teal-500 text-slate-950 font-medium rounded py-2 px-4 w-full">Entrar</button>
+                    <p class="text-gray-200">
+                        Ainda não possui uma conta? <span class="font-bold"><a href="{% url 'signup' %}">Faça seu cadastro</a></span>.
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

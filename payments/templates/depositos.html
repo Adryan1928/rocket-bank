@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+
+{%block header%}
+    <h1>Depósitos</h1>
+{%endblock%}
+
+{%block content%}
+    <main class="flex flex-col justify-center items-center">
+        <div class="bg-slate-800 p-16 m-8 flex flex-col gap-8 rounded-lg">
+            <h2 class="text-2xl">Deposite com o <span class="text-teal-500 font-bold">Rocket</span> Bank</h2>
+            <form action="." method="post" class="flex flex-col gap-8"> {% csrf_token %}
+                <div class="flex flex-col justify-center items-center">
+                    <label for="valor">Valor:</label>
+                    <input type="text" id="valor" name="valor" class="w-full p-2 bg-slate-900 border border-opacity-60 border-stone-400 rounded">
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="senha" id="senha" class="w-full p-2 bg-slate-900 border border-opacity-60 border-stone-400 rounded">
+                </div>
+                <input class="bg-teal-500 text-black font-bold p-2 rounded hover:bg-teal-600 transition-colors w-full cursor-pointer" value="Fazer depósito" type="submit">
+                <input type="reset" class="bg-teal-500 text-black font-bold p-2 rounded hover:bg-teal-600 transition-colors w-full cursor-pointer">
+            </form>
+        </div>
+    </main>
+{%endblock%}

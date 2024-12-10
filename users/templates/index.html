@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="flex flex-col justify-around gap-20 w-full">
+  <section class="flex container w-full m-auto justify-between align-center items-center gap-20 h-[95vh] px-5">
+    <div class="flex flex-col max-w-sm gap-10">
+      <div class="flex">
+        <h1 class="text-7xl font-bold">
+          <a href=""><span class="text-teal-500">
+              Rocket<br>
+            </span>Bank</a>
+
+        </h1>
+      </div>
+      <div class="flex flex-col gap-4">
+        <h2 class="text-2xl font-semibold"><span class="text-teal-500">Turbine</span> Seu Dinheiro</h2>
+        <p class="max-w-96">Turbine seu dinheiro com o Rocket Bank, o banco que entende suas necessidades
+          financeiras e trabalha para maximizar seu potencial de ganhos. Nós oferecemos uma variedade de
+          produtos e serviços financeiros projetados para ajudá-lo a economizar mais, investir melhor e
+          aumentar sua riqueza.
+        </p>
+      </div>
+
+      <button class="w-56 bg-teal-500 p-2.5 rounded text-slate-950 font-medium">
+        Junte-se a nós
+      </button>
+    </div>
+    <div class="hidden md:block relative">
+      <div class="w-80 h-80 rounded-full bg-blue-950 blur-2xl absolute "></div>
+      <img src="{% static 'assets/Foguete.svg' %}" alt="Foguete" class="relative inset-0">
+
+    </div>
+
+  </section>
+
+  <!--Segunda parte-->
+  <section class="flex justify-around items-center bg-sky-950 w-full h-screen gap-5">
+    <div class="hidden md:block relative">
+      <div class="bg-slate-900 flex items-center justify-center rounded-full blur-2xl absolute inset-0">
+        <!--Rounded-full-->
+      </div>
+      <img src="{% static 'assets/Four Tech Podium 1.svg' %}" alt="Pódio azul"
+        class="max-w-96 h-96 relative origin-center">
+    </div>
+    <div class="flex flex-col gap-20">
+      <h2 class="font-bold text-5xl"><span class="text-teal-500">Alto</span> Rendimento</h2>
+      <p class="max-w-96">
+        Com contas de poupança de alto rendimento, opções de investimento personalizadas e uma plataforma de
+        negociação de ações de última geração, o Rocket Bank é o parceiro financeiro que você precisa para
+        acelerar seu crescimento financeiro.
+      </p>
+    </div>
+  </section>
+
+  <!--Terceira parte-->
+  <section class="flex justify-around items-center w-screen h-screen gap-5 px-5">
+    <div class="flex flex-col gap-20">
+      <h2 class="font-bold text-5xl"><span class="text-teal-500">Diversos</span> Serviços</h2>
+      <p class="max-w-96"> Sabemos que cada cliente é único e tem necessidades financeiras diferentes. É por isso
+        que oferecemos uma variedade de produtos e serviços, desde contas correntes e de poupança até
+        empréstimos e investimentos. Nossa equipe de especialistas está sempre pronta para ajudá-lo a escolher a
+        opção que melhor atende às suas necessidades.
+      </p>
+    </div>
+    <div class="hidden md:block relative">
+      <div class="absolute inset-0 bg-blue-950 rounded-full blur-2xl"></div>
+      <div class="flex justify-center items-center h-full">
+        <div class="">
+          <img src="{% static 'assets/Chainlink 1.svg' %}" alt="Chainlink 1" class="w-36 h-36 relative origin-center">
+          <img src="{% static 'assets/Synthetix 1.svg' %}" alt="Synthetix 1" class="w-48 h-48 relative origin-center">
+        </div>
+        <div class="">
+          <img src="{% static 'assets/Ethereum 1.svg' %}" alt="Ethereum 1" class="w-44 h-44 relative origin-center">
+          <img src="{% static 'assets/Lisk.svg' %}" alt="Lisk" class="w-58 h-58 relative origin-center">
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

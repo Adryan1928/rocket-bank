@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Pagamentos</h1>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center gap-4 lg:gap-20 p-8 lg:p-16 flex-col md:flex-row">
+  <div class="bg-slate-800 w-full lg:w-2/6 text-center p-12 flex flex-col gap-12 rounded-lg">
+    <h2 class="text-2xl">
+      <span class="text-teal-500">Saldo:</span> R${{ user.client.cash }}
+    </h2>
+    <div>
+      <h2 class="text-2xl mb-1">Extrato</h2>
+      <div class="w-full h-1 bg-slate-900"></div>
+    </div>
+    <div>
+      <ul class="flex flex-col gap-2">
+        {% if payments %}
+        {% for expense in payments.Expenses %}
+        <li>
+          <div class="flex justify-between mb-1">
+            <p>{{ expense.receiver__user__first_name }} {{ expense.receiver__user__last_name }}</p>
+            <p class="text-red-500">Saída</p>
+            <p>{{ expense.value }} R$</p>
+            <p>Chave: {{ expense.pix__key }}</p>
+          </div>
+          <div class="w-full h-px bg-slate-900"></div>
+        </li>
+        {% endfor %}
+        {% for income in payments.Incomes %}
+        <li>
+          <div class="flex justify-between mb-1">
+            <p>{{ income.sender__user__first_name }} {{ income.sender__user__last_name }}</p>
+            <p class="text-green-500">Entrada</p>
+            <p>{{ income.value }} R$</p>
+            <p>Chave: {{ income.pix__key }}</p>
+          </div>
+          <div class="w-full h-px bg-slate-900"></div>
+        </li>
+        {% endfor %}
+        {% else %}
+        <p>Nenhum pagamento foi realizado</p>
+        {% endif %}
+      </ul>
+    </div>
+    <div>
+      <a href="{% url 'payments:extrato' %}" title="Visualizar extrato em tela cheia">
+        <button class="bg-slate-900 px-3 py-px rounded-full hover:bg-slate-700">Visualizar em tela cheia</button>
+      </a>
+    </div>
+  </div>
+  <div class="lg:w-1/2 w-full flex flex-col gap-12">
+    <div class="bg-slate-800 rounded-lg">
+      <ul class="flex p-4 gap-6 items-center">
+        <li><a href="{% url 'payments:pix' %}" title="Acessar Pix">
+            <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
+              <p>Pix</p>
+            </div>
+          </a>
+        </li>
+        <li><a href="{% url 'payments:depositos' %}" title="Acessar Depósito">
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/vaadin_money-deposit.svg"
+                alt="Depósito">
+              <p>Depósito</p>
+            </div>
+          </a>
+        </li>
+        <li><a href="{% url 'payments:register_pix' %}" title="Registrar Chave Pix">
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/ic_baseline-pix.svg"
+                alt="Registrar Chave Pix">
+              <p>Registrar Chave Pix</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="bg-slate-800 flex flex-col items-center gap-12 p-8 rounded-lg">
+      <div class="w-1/2 text-center">
+        <h2 class="text-2xl">Favoritos</h2>
+        <div class="w-full h-1 bg-slate-900"></div>
+      </div>
+      <div class="w-full flex gap-8 px-2">
+        <div class="w-1/2">
+          <ul class="flex flex-col gap-2">
+            {% for favorito in favorites %}
+            <li class="flex flex-col">
+              <div class="flex justify-between mb-1">
+                <p>{{ favorito.pix.user.user.first_name }}</p>
+                <a href="{% url 'payments:delete_favorite' favorito.id %}" title="Remover favorito"><button
+                    class="bg-red-600 rounded-full px-2 py-px hover:bg-red-500">Remover</button></a>
+              </div>
+              <div class="w-full h-px bg-slate-900"></div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="w-1/2 flex justify-end">
+          <div><button class="bg-slate-900 px-3 py-px rounded-ful l hover:bg-slate-700 duration-300" id="adicionar"
+              onclick="mostrar()">Adicionar</button></div>
+          <div id="modal" class="hidden w-full bg-slate-900 rounded-xl p-6">
+            <h2 class="text-center text-xl mb-4">Novo favorito</h2>
+            <form action="{% url 'payments:add_favorite' %}" method="post">
+              {% csrf_token %}
+              <div class="mb-2">
+                <label for="Name">Nome</label>
+                <input type="text" name="name" placeholder="Digite aqui"
+                  class="bg-slate-800 px-2 py-1 rounded-lg w-full mt-1" required>
+              </div>
+              <div class="mb-2">
+                <label for="key">Chave</label>
+                <input type="text" name="key" placeholder="Digite aqui"
+                  class="bg-slate-800 px-2 py-1 rounded-lg w-full mt-1" required>
+              </div>
+              <div>
+                <label for="type">Tipo</label>
+                <div>
+                  <input type="radio" name="type" id="cpf" value="cpf" required>
+                  <label for="cpf">CPF</label>
+                </div>
+                <div>
+                  <input type="radio" name="type" id="tel" value="tel">
+                  <label for="tel">Telefone</label>
+                </div>
+                <div>
+                  <input type="radio" name="type" id="num" value="num">
+                  <label for="num">Número da conta</label>
+                </div>
+              </div>
+              <div class="mt-4 flex gap-2 justify-center">
+                <input type="submit" value="Salvar"
+                  class="rounded-full bg-teal-500 px-2 lg:px-4 py-1 text-slate-950 hover:bg-teal-400 cursor-pointer">
+                <input type="reset" value="Cancelar"
+                  class="rounded-full bg-red-600 px-4 py-1 text-slate-950 hover:bg-red-500 cursor-pointer"
+                  onclick="esconder()">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function mostrar() {
+    let modal = document.getElementById('modal')
+    let adicionar = document.getElementById('adicionar')
+    adicionar.classList.add('hidden')
+    modal.classList.remove('hidden')
+  }
+
+  function esconder() {
+    let modal = document.getElementById('modal')
+    modal.classList.add('hidden')
+    adicionar.classList.remove('hidden')
+  }
+</script>
+{% endblock %}
