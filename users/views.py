@@ -19,7 +19,7 @@ def signin(request):
 
         if user:
             login(request, user)
-            return redirect(f"/payments/{user.client.id}", id=user.id)
+            return redirect("/payments/")
         else:
             messages.add_message(request, constants.ERROR, 'Usuário ou senha inválidos')
     return render(request, "signin.html")
@@ -48,6 +48,11 @@ def signup(request):
                 messages.add_message(request, constants.ERROR, 'Dados inválidos ou outro usuário já possui este email')
 
     return render(request, "signup.html")
+
+def logout_view(request):
+    print('logout', request.user)
+    logout(request)
+    return redirect('/')
 
 def real_state_financing(request):
     return render(request, "financing.html")

@@ -22,7 +22,7 @@
                     <p class="text-gray-50">Por favor, preencha os campos com seus dados</p>
             </div>
 
-            <form action="." method="POST" class="space-y-20 px-1"> {% csrf_token %}
+            <form action="." method="post" class="space-y-20 px-1"> {% csrf_token %}
                 <div class="flex flex-col space-y-6">
                         {% if messages %}
                             {% for message in messages %}

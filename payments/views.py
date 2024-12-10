@@ -27,58 +27,52 @@ def show_payments(request):
         return render(request, 'pagamentos.html', context=context)
 
 @login_required
-def add_favorite(request, id):
-    if request.user.client.id != id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
+def add_favorite(request):
     key = request.POST.get('key')
     type = request.POST.get('type')
 
-    print(key)
-
     pix = get_object_or_404(Pix, key=key)
-    user = get_object_or_404(Client, pk=id)
+    user = get_object_or_404(Client, user=request.user)
+    print(user)
 
     favorite = Favorite(user=user, pix=pix)
     favorite.save()
 
-    return redirect(reverse('payments:show_payments', args=[id]))
+    return redirect(reverse('payments:show_payments'))
 
 @login_required
 def delete_favorite(request, id):
     favorite = Favorite.objects.get(id=id)
     if request.user.id != favorite.user.user.id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
-    user_id = favorite.user.id
+            return redirect(reverse('payments:show_payments'))
     favorite.delete()
 
-    return redirect(reverse('payments:show_payments', args=[user_id]))
+    return redirect(reverse('payments:show_payments'))
 
 @login_required
-def pix(request, id, step=None):
-    print(step)
+def pix(request, step=None):
     if step == 'select' or not step:
-        return render(request, 'pix.html', {'post': id})
+        return render(request, 'pix.html')
     elif step == 'finalizar':
         dados = request.session.get('dados')
         print(dados)
         if not dados:
-            return redirect(reverse('payments:pix', args=[id]))
+            return redirect(reverse('payments:pix'))
 
         senha = request.POST.get('senha')
-        user = Client.objects.get(id=id)
-        print(user.user.password)
-        if senha != user.user.password:
+        user = Client.objects.get(user=request.user)
+        if not user.user.check_password(senha):
             print("Errada")
-            return render(request, 'pix_confirm.html', {'post': id, 'dados': dados})
+            return render(request, 'pix_confirm.html', {'dados': dados})
 
         pix = Pix.objects.get(key=dados['chave'])
 
-        set_payment(request.user.client.id, pix.user_id, dados['valor'], pix)
+        set_payment(user.id, pix.user_id, dados['valor'], pix)
 
         # Clear session data after use
         del request.session['dados']
 
-        return redirect(reverse('payments:show_payments', args=[id]))
+        return redirect(reverse('payments:show_payments'))
 
     chave = request.POST.get('chave')
     type = request.POST.get('radio')
@@ -88,9 +82,9 @@ def pix(request, id, step=None):
         pix = Pix.objects.get(key=chave)
         dados = {'chave': chave, 'type': type, 'valor': valor}
         request.session['dados'] = dados
-        return render(request, 'pix_confirm.html', {'post': id})
+        return render(request, 'pix_confirm.html')
     except Pix.DoesNotExist:
-        return render(request, 'pix.html', {'post': id, 'error': 'Chave Pix não encontrada'})
+        return render(request, 'pix.html', {'error': 'Chave Pix não encontrada'})
 
 @login_required
 def depositos(request):
@@ -102,7 +96,7 @@ def depositos(request):
             try:
                 user.cash += Decimal(valor)
                 user.save()
-                return redirect(reverse('payments:show_payments', args=[user.id]))
+                return redirect(reverse('payments:show_payments'))
             except:
                 pass
     return render(request, 'depositos.html')
@@ -188,6 +182,6 @@ def register_pix(request):
 
         Pix.objects.create(user=user, key=key, type=type)
 
-        return redirect(reverse('payments:show_payments', args=[user.id]))
+        return redirect(reverse('payments:show_payments'))
 
     return render(request, 'register_pix.html')

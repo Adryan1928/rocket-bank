@@ -18,7 +18,7 @@
 
 <body class="text-slate-50">
   <header class="bg-slate-800 flex justify-between items-center px-6 py-3">
-    {% if user %}
+    {% if user.is_authenticated %}
     <p class="text-2xl  font-bold"><span class="text-teal-500"><a
           href="{% url 'payments:show_payments' %}">Rocket</span> Bank</a></p>
     {% else %}
@@ -30,8 +30,11 @@
       {% endblock %}
     </div>
     <div class=" flex gap-12">
-      {% if user %}
-      <h3 class="text-xl">Bem vindo</h3>
+      {% if user.is_authenticated %}
+      <div class="flex gap-4">
+        <h3 class="text-xl">Bem vindo</h3>
+        <a class="text-xl text-red-600" href="{% url 'logout' %}">Sair</a>
+      </div>
       {% else %}
       <div class="hidden md:flex gap-4 items-center">
         <button><a href="{% url 'real_state_financing' %}">Financiamento imobiliário</a></button>

@@ -15,7 +15,7 @@
   </div>
   <!--Tela pix-->
   <form class="bg-slate-800 md:w-1/2 px-16 py-8 flex flex-col gap-20 rounded-lg"
-    action="{% url 'payments:pix' id=post step='para_confirm' %}" method="post">
+    action="{% url 'payments:pix' step='para_confirm' %}" method="post">
     {% csrf_token %}
     <h1 class="text-4xl font-semibold text-center">Selecione a Chave</h1>
     <div class="flex flex-col justify-center items-center">
