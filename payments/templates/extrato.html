@@ -10,7 +10,7 @@
     <div class="w-full flex flex-col gap-4 h-screen">
       <div class="flex bg-slate-900 rounded-full py-1 px-2 gap-6">
         <img src="/static/assets/Vector.svg" class="relative inset-0" alt="Pesquisar">
-        <form action="{% url 'payments:extrato' %}" class="w-full" method="post">
+        <form action="{% url 'payments:extrato' %}" class="w-full" method="post"> {% csrf_token %}
           <input class="w-full bg-slate-900" placeholder="Pesquise por datas, nomes, valores..." name="search"
             type="text">
         </form>
