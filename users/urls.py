@@ -6,5 +6,4 @@ urlpatterns = [
     path("signin/", views.signin, name="signin"),
     path("signup/", views.signup, name="signup"),
     path("real-state-financing/", views.real_state_financing, name="real_state_financing"),
-    path("<int:id>/extrato/", views.extrato, name="extrato"),
 ]

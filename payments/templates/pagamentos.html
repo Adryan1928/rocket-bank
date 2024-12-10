@@ -17,22 +17,24 @@
     <div>
       <ul class="flex flex-col gap-2">
         {% if payments %}
-        {% for saida in payments.Saidas %}
+        {% for expense in payments.Expenses %}
         <li>
           <div class="flex justify-between mb-1">
-            <p>{{ saida.name }}</p>
+            <p>{{ expense.receiver__user__first_name }} {{ expense.receiver__user__last_name }}</p>
             <p class="text-red-500">Saída</p>
-            <p>{{ saida.value }} R$</p>
+            <p>{{ expense.value }} R$</p>
+            <p>Chave: {{ expense.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
         {% endfor %}
-        {% for entrada in payments.Entradas %}
+        {% for income in payments.Incomes %}
         <li>
           <div class="flex justify-between mb-1">
-            <p>{{ entrada.name }}</p>
+            <p>{{ income.sender__user__first_name }} {{ income.sender__user__last_name }}</p>
             <p class="text-green-500">Entrada</p>
-            <p>{{ entrada.value }} R$</p>
+            <p>{{ income.value }} R$</p>
+            <p>Chave: {{ income.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
@@ -43,25 +45,32 @@
       </ul>
     </div>
     <div>
-      <a href="{% url 'extrato' post %}"></a>
-      <button class="bg-slate-900 px-3 py-px rounded-full hover:bg-slate-700">Visualizar em tela cheia</button>
+      <a href="{% url 'payments:extrato' %}" title="Visualizar extrato em tela cheia">
+        <button class="bg-slate-900 px-3 py-px rounded-full hover:bg-slate-700">Visualizar em tela cheia</button>
       </a>
     </div>
   </div>
   <div class="lg:w-1/2 w-full flex flex-col gap-12">
     <div class="bg-slate-800 rounded-lg">
       <ul class="flex p-4 gap-6 items-center">
-        <li><a href="{% url 'payments:pix' post %}"></a>
-          <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
-            <p>Pix</p>
-          </div>
+        <li><a href="{% url 'payments:pix' post %}" title="Acessar Pix">
+            <div class="h-full flex flex-col justify-between"><img src="/static/assets/ic_baseline-pix.svg" alt="Pix">
+              <p>Pix</p>
+            </div>
           </a>
         </li>
-        <li><a href="{% url 'payments:depositos' post %}"></a>
-          <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/vaadin_money-deposit.svg"
-              alt="Depósito">
-            <p>Depósito</p>
-          </div>
+        <li><a href="{% url 'payments:depositos' %}" title="Acessar Depósito">
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/vaadin_money-deposit.svg"
+                alt="Depósito">
+              <p>Depósito</p>
+            </div>
+          </a>
+        </li>
+        <li><a href="{% url 'payments:register_pix' %}" title="Registrar Chave Pix">
+            <div class="flex flex-col justify-between"><img class="h-6" src="/static/assets/ic_baseline-pix.svg"
+                alt="Registrar Chave Pix">
+              <p>Registrar Chave Pix</p>
+            </div>
           </a>
         </li>
       </ul>
@@ -78,7 +87,7 @@
             <li class="flex flex-col">
               <div class="flex justify-between mb-1">
                 <p>{{ favorito.user.user.first_name }}</p>
-                <a href="{% url 'payments:delete_favorite' favorito.id %}"><button
+                <a href="{% url 'payments:delete_favorite' favorito.id %}" title="Remover favorito"><button
                     class="bg-red-600 rounded-full px-2 py-px hover:bg-red-500">Remover</button></a>
               </div>
               <div class="w-full h-px bg-slate-900"></div>

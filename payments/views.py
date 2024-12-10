@@ -1,12 +1,16 @@
-import json
+import re
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from datetime import datetime
+
+from .services import get_payments, set_payment
 from users.models import Client
 from .models import Payment, Favorite, Pix
-from .services import get_payments, set_payment
-from django.shortcuts import render
-from .models import Payment
-from django.contrib.auth.decorators import login_required
+
+from decimal import Decimal
+
 
 @login_required
 def show_payments(request, id):
@@ -55,6 +59,7 @@ def delete_favorite(request, id):
 
     return redirect(reverse('payments:show_payments', args=[user_id]))
 
+@login_required
 def pix(request, id, step=None):
     print(step)
     if step == 'select' or not step:
@@ -74,7 +79,7 @@ def pix(request, id, step=None):
 
         pix = Pix.objects.get(key=dados['chave'])
 
-        set_payment(request.user.client.id, pix.user_id, dados['valor'])
+        set_payment(request.user.client.id, pix.user_id, dados['valor'], pix)
 
         # Clear session data after use
         del request.session['dados']
@@ -94,16 +99,101 @@ def pix(request, id, step=None):
         return render(request, 'pix.html', {'post': id, 'error': 'Chave Pix não encontrada'})
 
 @login_required
-def depositos(request, id):
-    print(request.user)
-    if request.user.client.id != id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
+def depositos(request):
     if request.method == 'POST':
+        user =  Client.objects.get(user = request.user)
         valor = request.POST.get('valor')
         senha = request.POST.get('senha')
-        user = Client.objects.get(pk=id)
-        if senha == user.user.password:
-            user.cash += float(valor)
-            user.save()
-            return redirect(reverse('payments:show_payments', args=[id]))
-    return render(request, 'depositos.html', {'post': id})
+        if user.user.check_password(senha):
+            try:
+                user.cash += Decimal(valor)
+                user.save()
+                return redirect(reverse('payments:show_payments', args=[user.id]))
+            except:
+                pass
+    return render(request, 'depositos.html')
+
+@login_required
+def extrato(request):
+    if request.method == 'POST':
+        payments = Payment.objects.filter(
+            Q(receiver__user__id=request.user.id) | Q(sender__user__id=request.user.id)
+        )
+
+        search_query = request.POST.get('search', '').strip()
+        order_by_date = request.POST.get('Data', None)
+        order_by_name = request.POST.get('nomes', None)
+
+        # Apply ordering by date
+        if order_by_date:
+            payments = payments.order_by(order_by_date)
+
+        # Apply ordering by name
+        if order_by_name:
+            if order_by_name == 'ascending':
+                payments = payments.order_by(order_by_date, 'sender__user__first_name') if order_by_date else payments.order_by('sender__user__first_name')
+            elif order_by_name == 'descending':
+                payments = payments.order_by(order_by_date, '-sender__user__first_name') if order_by_date else payments.order_by('-sender__user__first_name')
+
+        if search_query != '':
+            # Filter by user
+            payments = payments.filter(
+                Q(receiver__user__id=request.user.id) & Q(sender__user__email__icontains=search_query) |
+                Q(receiver__user__id=request.user.id) & Q(sender__user__username__icontains=search_query) |
+                Q(receiver__user__id=request.user.id) & Q(sender__user__first_name__icontains=search_query) |
+                Q(receiver__user__id=request.user.id) & Q(sender__user__last_name__icontains=search_query)
+            )
+
+            payments = payments.filter(
+                Q(sender__user__id=request.user.id) & Q(receiver__user__email__icontains=search_query) |
+                Q(sender__user__id=request.user.id) & Q(receiver__user__username__icontains=search_query) |
+                Q(sender__user__id=request.user.id) & Q(receiver__user__first_name__icontains=search_query) |
+                Q(sender__user__id=request.user.id) & Q(receiver__user__last_name__icontains=search_query)
+            )
+
+            # Find integer and float values and convert floats to intl pattern
+            query_values = re.findall(r'(?<!\S)\d+(?:,\d+)?(?!\S)', search_query)
+            float_values = [float(value.replace(',', '.')) for value in query_values]
+
+            # Filter by float values
+            payments = payments.filter(value__in=float_values)
+
+            # Filter by dates
+            date_patterns = [
+                r'\b\d{4}-\d{2}-\d{2}\b',  # YYYY-MM-DD
+                r'\b\d{2}/\d{2}/\d{4}\b'   # DD/MM/YYYY
+            ]
+            for pattern in date_patterns:
+                date_matches = re.findall(pattern, search_query)
+                for date_str in date_matches:
+                    try:
+                        if '-' in date_str:
+                            date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+                        else:
+                            date_obj = datetime.strptime(date_str, '%d/%m/%Y').date()
+                        payments = payments.filter(date=date_obj)
+                    except ValueError:
+                        pass
+
+        payments = get_payments(request.user.client.id, payments)
+    else:
+        payments = get_payments(request.user.client.id)
+
+    context = {
+        'payments': payments
+    }
+
+    return render(request, 'extrato.html', context)
+
+@login_required
+def register_pix(request):
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        type = request.POST.get('type')
+        user = request.user.client
+
+        Pix.objects.create(user=user, key=key, type=type)
+
+        return redirect(reverse('payments:show_payments', args=[user.id]))
+
+    return render(request, 'register_pix.html')

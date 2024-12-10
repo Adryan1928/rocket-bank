@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Registrar Chave Pix</h1>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center w-full h-full py-12">
+  <div class="w-11/12 h-5/6 bg-slate-800 rounded-lg px-4 py-5 flex flex-col gap-12">
+    <form action="{% url 'payments:register_pix' %}" method="post" class="flex flex-col gap-4">
+      {% csrf_token %}
+      <div>
+        <label for="key">Chave</label>
+        <div class="flex">
+          <input type="text" name="key" id="key" placeholder="Digite a chave Pix"
+            class="bg-slate-900 px-2 py-2 rounded-l-lg w-full" required>
+          <button type="button" id="regenerate-btn"
+            class="bg-slate-900 px-2 py-2 ml-4 rounded-r-lg hover:bg-slate-700 hidden"
+            onclick="generateRandomKey()">Regenerar</button>
+        </div>
+      </div>
+      <div>
+        <label for="type">Tipo</label>
+        <div>
+          <input type="radio" name="type" id="cpf" value="cpf" required onchange="updateKeyInput()">
+          <label for="cpf">CPF</label>
+        </div>
+        <div>
+          <input type="radio" name="type" id="tel" value="tel" onchange="updateKeyInput()">
+          <label for="tel">Telefone</label>
+        </div>
+        <div>
+          <input type="radio" name="type" id="email" value="email" onchange="updateKeyInput()">
+          <label for="email">Email</label>
+        </div>
+        <div>
+          <input type="radio" name="type" id="random" value="random" onchange="updateKeyInput()">
+          <label for="random">Chave Aleatória</label>
+        </div>
+      </div>
+      <div class="mt-4 flex gap-2 justify-center">
+        <input type="submit" value="Registrar"
+          class="rounded-full bg-teal-500 px-4 py-1 text-slate-950 hover:bg-teal-400 cursor-pointer">
+        <input type="reset" value="Cancelar"
+          class="rounded-full bg-red-600 px-4 py-1 text-slate-950 hover:bg-red-500 cursor-pointer">
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  let randomKey = "";
+
+  function updateKeyInput() {
+    const keyInput = document.getElementById('key');
+    const regenerateBtn = document.getElementById('regenerate-btn');
+    const cpfRadio = document.getElementById('cpf');
+    const telRadio = document.getElementById('tel');
+    const emailRadio = document.getElementById('email');
+    const randomRadio = document.getElementById('random');
+
+    if (cpfRadio.checked) {
+      keyInput.placeholder = 'Digite o CPF';
+      keyInput.type = 'text';
+      keyInput.value = '';
+      keyInput.oninput = formatCPF;
+      regenerateBtn.classList.add('hidden');
+    } else if (telRadio.checked) {
+      keyInput.placeholder = 'Digite o Telefone';
+      keyInput.type = 'tel';
+      keyInput.value = '';
+      keyInput.oninput = formatPhoneNumber;
+      regenerateBtn.classList.add('hidden');
+    } else if (emailRadio.checked) {
+      keyInput.placeholder = 'Digite o Email';
+      keyInput.type = 'email';
+      keyInput.value = '';
+      keyInput.oninput = null;
+      regenerateBtn.classList.add('hidden');
+    } else if (randomRadio.checked) {
+      keyInput.placeholder = 'Chave Aleatória';
+      keyInput.type = 'text';
+      if (randomKey == '') generateRandomKey();
+      keyInput.value = randomKey;
+      keyInput.oninput = null;
+      regenerateBtn.classList.remove('hidden');
+    }
+  }
+
+  function generateRandomKey() {
+    const keyInput = document.getElementById('key');
+    randomKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    keyInput.value = randomKey;
+  }
+
+  function formatCPF(event) {
+    const input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    input.value = value;
+  }
+
+  function formatPhoneNumber(event) {
+    const input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    input.value = value;
+  }
+</script>
+{% endblock %}
