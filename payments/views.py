@@ -9,6 +9,8 @@ from .services import get_payments, set_payment
 from users.models import Client
 from .models import Payment, Favorite, Pix
 
+from decimal import Decimal
+
 
 @login_required
 def show_payments(request, id):
@@ -97,19 +99,19 @@ def pix(request, id, step=None):
         return render(request, 'pix.html', {'post': id, 'error': 'Chave Pix não encontrada'})
 
 @login_required
-def depositos(request, id):
-    print(request.user)
-    if request.user.client.id != id:
-            return redirect(reverse('payments:show_payments', args=[request.user.client.id]))
+def depositos(request):
     if request.method == 'POST':
+        user =  Client.objects.get(user = request.user)
         valor = request.POST.get('valor')
         senha = request.POST.get('senha')
-        user = Client.objects.get(pk=id)
-        if senha == user.user.password:
-            user.cash += float(valor)
-            user.save()
-            return redirect(reverse('payments:show_payments', args=[id]))
-    return render(request, 'depositos.html', {'post': id})
+        if user.user.check_password(senha):
+            try:
+                user.cash += Decimal(valor)
+                user.save()
+                return redirect(reverse('payments:show_payments', args=[user.id]))
+            except:
+                pass
+    return render(request, 'depositos.html')
 
 @login_required
 def extrato(request):

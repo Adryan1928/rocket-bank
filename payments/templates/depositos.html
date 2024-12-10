@@ -8,7 +8,7 @@
     <main class="flex flex-col justify-center items-center">
         <div class="bg-slate-800 p-16 m-8 flex flex-col gap-8 rounded-lg">
             <h2 class="text-2xl">Deposite com o <span class="text-teal-500 font-bold">Rocket</span> Bank</h2>
-            <form action="{{ url_for('depositos', id=post) }}" method="post" class="flex flex-col gap-8">
+            <form action="." method="post" class="flex flex-col gap-8"> {% csrf_token %}
                 <div class="flex flex-col justify-center items-center">
                     <label for="valor">Valor:</label>
                     <input type="text" id="valor" name="valor" class="w-full p-2 bg-slate-900 border border-opacity-60 border-stone-400 rounded">
