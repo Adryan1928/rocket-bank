@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.core.paginator import Paginator
 
 from .services import get_payments, set_payment
 from users.models import Client
@@ -15,9 +16,18 @@ from decimal import Decimal
 @login_required
 def show_payments(request):
     if request.method == 'GET':
-        payments = get_payments(request.user.client.id)
+        payments_all = Payment.objects.all().order_by('-date')
         user = Client.objects.get(user=request.user)
         favorites = Favorite.objects.filter(user=user)
+
+        paginator = Paginator(payments_all, 3)
+        page = request.GET.get('page', 1)
+        payments = paginator.page(page)
+
+
+        payments_list = Payment.objects.filter(id__in=[payment.id for payment in payments.object_list])
+
+        payments.object_list = get_payments(request.user.client.id, payments_list)
 
         context = {
             'favorites': favorites,
