@@ -125,24 +125,26 @@ def extrato(request):
 
         if search_query != '':
             # Filter by user
+            if (search_query.isnumeric()):
+                # Find integer and float values and convert floats to intl pattern
+                query_values = re.findall(r'(?<!\S)\d+(?:,\d+)?(?!\S)', search_query)
+                float_values = [float(value.replace(',', '.')) for value in query_values]
 
-            payments = payments.filter(
-                Q(sender__user__id=request.user.id) & Q(receiver__user__email__icontains=search_query) |
-                Q(sender__user__id=request.user.id) & Q(receiver__user__username__icontains=search_query) |
-                Q(sender__user__id=request.user.id) & Q(receiver__user__first_name__icontains=search_query) |
-                Q(sender__user__id=request.user.id) & Q(receiver__user__last_name__icontains=search_query) |
-                Q(receiver__user__id=request.user.id) & Q(sender__user__email__icontains=search_query) |
-                Q(receiver__user__id=request.user.id) & Q(sender__user__username__icontains=search_query) |
-                Q(receiver__user__id=request.user.id) & Q(sender__user__first_name__icontains=search_query) |
-                Q(receiver__user__id=request.user.id) & Q(sender__user__last_name__icontains=search_query)
-            )
+                # Filter by float values
+                payments = payments.filter(value__in=float_values)
+            else:
+                payments = payments.filter(
+                    Q(sender__user__id=request.user.id) & Q(receiver__user__email__icontains=search_query) |
+                    Q(sender__user__id=request.user.id) & Q(receiver__user__username__icontains=search_query) |
+                    Q(sender__user__id=request.user.id) & Q(receiver__user__first_name__icontains=search_query) |
+                    Q(sender__user__id=request.user.id) & Q(receiver__user__last_name__icontains=search_query) |
+                    Q(receiver__user__id=request.user.id) & Q(sender__user__email__icontains=search_query) |
+                    Q(receiver__user__id=request.user.id) & Q(sender__user__username__icontains=search_query) |
+                    Q(receiver__user__id=request.user.id) & Q(sender__user__first_name__icontains=search_query) |
+                    Q(receiver__user__id=request.user.id) & Q(sender__user__last_name__icontains=search_query)
+                )
 
-            # Find integer and float values and convert floats to intl pattern
-            # query_values = re.findall(r'(?<!\S)\d+(?:,\d+)?(?!\S)', search_query)
-            # float_values = [float(value.replace(',', '.')) for value in query_values]
-
-            # Filter by float values
-            # payments = payments.filter(value__in=float_values)
+            
 
             # print(payments)
 
