@@ -17,28 +17,27 @@
     <div>
       <ul class="flex flex-col gap-2">
         {% if payments %}
-        {% for expense in payments.Expenses %}
+        {% for expense in payments.object_list.Expenses %}
         <li>
           <div class="flex justify-between mb-1">
-            <p>{{ expense.receiver__user__first_name }} {{ expense.receiver__user__last_name }}</p>
+            <p>{{ expense.receiver__user__first_name }}</p>
             <p class="text-red-500">Saída</p>
             <p>{{ expense.value }} R$</p>
-            <p>Chave: {{ expense.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
         {% endfor %}
-        {% for income in payments.Incomes %}
+        {% for income in payments.object_list.Incomes %}
         <li>
           <div class="flex justify-between mb-1">
             <p>{{ income.sender__user__first_name }} {{ income.sender__user__last_name }}</p>
             <p class="text-green-500">Entrada</p>
             <p>{{ income.value }} R$</p>
-            <p>Chave: {{ income.pix__key }}</p>
           </div>
           <div class="w-full h-px bg-slate-900"></div>
         </li>
         {% endfor %}
+        <div class="flex justify-center items-center">{% include 'pagination.html' with page_obj=payments %}</div>
         {% else %}
         <p>Nenhum pagamento foi realizado</p>
         {% endif %}
