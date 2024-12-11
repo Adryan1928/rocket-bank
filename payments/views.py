@@ -16,7 +16,9 @@ from decimal import Decimal
 @login_required
 def show_payments(request):
     if request.method == 'GET':
-        payments_all = Payment.objects.all().order_by('-date')
+        payments_all = Payment.objects.filter(
+            Q(receiver__user__id=request.user.id) | Q(sender__user__id=request.user.id)
+        ).order_by('-date')
         user = Client.objects.get(user=request.user)
         favorites = Favorite.objects.filter(user=user)
 
